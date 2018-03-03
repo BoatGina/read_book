@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>vue-book</title>
+  <meta name="viewport" content="width=device-width,height=device-height,
+    initial-scale=1.0,user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <!-- <link rel="shortcut icon" href="/static/logo.png" type="image/x-icon" /> -->
+</head>
+
+<body>
+  <div id="app"></div>
+
+  <script>
+    (function (doc, win) {
+      // 获取文档的根节点
+      var docEl = doc.documentElement;
+      // 判断移动端是否发生方向改变
+      var resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize';
+      var recalc = function () {
+        // 获取对象的宽度
+        if (typeof window.ontouchstart != 'object') {
+          doc.documentElement.style.fontSize = '50px';
+          return;
+        }
+        var clientWidth = docEl.clientWidth;
+        var clientHeight = docEl.clientHeight;
+        if (!clientWidth) return;
+        if (clientWidth <= clientHeight) {
+          if (clientWidth >= 750) {
+            docEl.style.fontSize = 100 + 'px';
+          } else {
+            docEl.style.fontSize = 100 * (clientWidth / 750) + 'px';
+          }
+        } else {
+          docEl.style.fontSize = 50 * (clientWidth / 750) + 'px';
+        }
+      };
+      if (!doc.addEventListener) return;
+      win.addEventListener(resizeEvt, recalc, false);
+      doc.addEventListener('DOMContentLoaded', recalc, false);
+    })(document, window);
+  </script>
+
+  <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+  <script type="text/javascript">
+    const socket = io.connect('http://localhost:3000');
+    //解决用户手动刷新浏览器后，原来的socketid失效的问题
+    const loginStatus = JSON.parse(localStorage.getItem("loginStatus") || '{}');
+    loginStatus.isLogin && socket.emit('update', loginStatus.userId);
+  </script>
+</body>
+
+</html>
