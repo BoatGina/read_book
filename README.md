@@ -1,5 +1,8 @@
 # 校园读书web应用
 
+## 说明
+该项目的图书信息使用了读书神奇的API，项目目前还在实现更多功能中，也尚未部署上线，近期将会更新。
+
 
 ## 技术栈
 * **Vue2.0**：实现前端页面构建
@@ -13,27 +16,46 @@
 * **localStorage**：本地保存用户信息
 * **Webpack**：模块打包，前端项目构建工具首选
 * **SASS**(**SCSS**)：CSS预处理语言
+* **Element-Ui**：Vue对应的UI组件
 * **Flex**：flex弹性布局，简单适配手机、PC端
 * **CSS3**：CSS3过渡动画及样式
 * **IScroll**：模拟原生app的列表滚动效果(ListView)
 * **MySQL**：MySQL关系型数据库持久化数据（考虑到表与表之间关系复杂，需要多表查询，最复杂的时候是六张表联查，用MySQL会比Mongodb好得多）
-* **jsonp**：跨域请求数据
+* **http-proxy-middleware**：node.js的代理中间件，实现代理请求
 * **pm2**：服务端使用pm2部署，常驻进程，比forever好用得多（https://github.com/Unitech/pm2 ）
 * **nginx**：服务端使用nginx代理端口转发
 
 ## 使用方式
 
-先将根目录下的qq.sql导入到你的MySQL数据库里(可以使用Navicat)，用户名为root，登录密码为123456。启动MySQL服务。然后使用cnpm install 安装所有依赖(最好用cnpm安装，因为项目依赖很多，npm用的是国外的镜像，在网络不稳定的情况下很有可能会导致安装失败，而且下载速度远远慢于国内的cnpm)，最后运行npm run dev。服务器部署运行项目只需要npm run pm2，这样就可以常驻进程，不过前提是得先全局安装pm2。
+先将根目录下的readbook.sql导入到你的MySQL数据库里(可以使用Navicat)，用户名为root，登录密码为123456。启动MySQL服务。然后使用cnpm install 安装所有依赖(最好用cnpm安装，因为项目依赖很多，npm用的是国外的镜像，在网络不稳定的情况下很有可能会导致安装失败，而且下载速度远远慢于国内的cnpm)，最后运行npm run dev。服务器部署运行项目只需要npm run pm2，这样就可以常驻进程，不过前提是得先全局安装pm2。
 
 
 ## 截图
 
 * 登录界面
 
-![](https://github.com/lensh/vue-qq/blob/master/screenshot/1.png)
+![](https://github.com/BoatGina/read_book/blob/master/screenshot/login.png)
 
-* 登录界面
+* 热门推荐界面
 
-![](https://github.com/lensh/vue-qq/blob/master/screenshot/1.png)
+![](https://github.com/BoatGina/read_book/blob/master/screenshot/tuijian.png)
 
+* 书架界面
 
+![](https://github.com/BoatGina/read_book/blob/master/screenshot/bookshelf.png)
+
+* 搜索界面
+
+![](https://github.com/BoatGina/read_book/blob/master/screenshot/search.png)
+
+* 书籍详情界面
+
+![](https://github.com/BoatGina/read_book/blob/master/screenshot/book_info.png)
+
+* 阅读书籍界面
+
+![](https://github.com/BoatGina/read_book/blob/master/screenshot/read_book.png)
+
+* 个人信息界面
+
+![](https://github.com/BoatGina/read_book/blob/master/screenshot/person.png)
