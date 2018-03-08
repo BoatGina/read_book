@@ -10,7 +10,7 @@
       </mt-button>
     </mt-header>
     <!-- 头像个人信息 -->
-    <div class="baseInfo" @click.stop="route('/user/s/showInfo/'+account.id+'')">
+    <div class="baseInfo" @click.stop="route(`/user/s/showInfo/${account.id}`)">
       <div class="img_wrapper">
         <img :src="account.iconUrl" />
       </div>
@@ -34,6 +34,8 @@
 </template>
 
 <script>
+import util from '@/utils/util.js';
+
 export default {
   name: "accountMain",
   data() {
@@ -54,7 +56,7 @@ export default {
   },
   computed: {
     account() {
-      return this.$store.getters.accountInfo;
+      return util.getItem("accountInfo");
     },
     lists() {
       let list = [

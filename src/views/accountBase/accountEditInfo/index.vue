@@ -52,7 +52,14 @@ export default {
   },
   methods: {},
   created() {},
-  components: {}
+  components: {},
+  mounted(){
+    // 处理光标问题
+    // let inputs = document.getElementsByTagName("input");
+    // console.log("标签集合：");
+    // console.log(inputs);
+    
+  }
 };
 </script>
 

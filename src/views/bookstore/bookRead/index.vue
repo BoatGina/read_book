@@ -327,6 +327,7 @@ export default {
    */
   beforeRouteLeave(to, from, next) {
     let readRecord = util.getItem("followBookList") || {};
+    // 
     if (!readRecord[this.$route.params.bookId]) {
       MessageBox.confirm("是否将小说加入书架？").then(
         () => {

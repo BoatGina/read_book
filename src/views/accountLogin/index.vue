@@ -40,7 +40,8 @@
 
 <script>
 import { check_login } from "@/api/login";
-import util from '@/utils/util';
+import util from "@/utils/util";
+import { mapActions } from "vuex";
 
 export default {
   name: "accountLogin",
@@ -57,6 +58,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["setAccountInfo"]),
     validate(user, pwd) {
       if (user == "") {
         this.errorMsg = "用户名不能为空";
@@ -82,23 +84,21 @@ export default {
     },
     //登陆后的回调
     callback({ code, data, message }) {
-      console.log('登录回调函数------');
+      console.log("登录回调函数------");
       if (code == 1) {
         // 成功登陆后处理
-        util.setItem('userId',data.loginStatus.userId);
+        util.setItem("userId", data.loginStatus.userId);
         let req = {
-          'username':this.accountName,
-          'pwd':null
+          username: this.accountName,
+          pwd: null
         };
-        if(this.savePassword){
-          req.pwd=this.accountPwd;
+        if (this.savePassword) {
+          req.pwd = this.accountPwd;
         }
         util.saveAccount(req);
-        this.$store.commit('SET_ACCOUNT_INFO', data.userInfo);
-        let that = this;
-        setTimeout(function(){
-          that.$router.replace("/");
-        },500);
+        this.setAccountInfo(data.userInfo).then(() => {
+          this.$router.replace("/");
+        });
       } else {
         this.errorMsg = message;
         return false;
@@ -118,15 +118,15 @@ export default {
     },
     selectAccount(item, index) {
       this.accountName = item.username;
-      if(item.pwd){
+      if (item.pwd) {
         this.accountPwd = item.pwd;
       }
       this.showUserlist = false;
     }
   },
-  computed:{
-    userList:function(){
-      return util.getItem('userList')? util.getItem('userList') :[];
+  computed: {
+    userList: function() {
+      return util.getItem("userList") ? util.getItem("userList") : [];
     }
   },
   created() {

@@ -27,9 +27,18 @@
     <!-- 最近阅读书籍和书架 -->
     <div class="history_wrapper">
       <h1>最近阅读</h1>
-      <ul class="book_list">
+      <div class="book_list">
 
-      </ul>
+        <p v-if="latelyReaded.length==0">暂无~</p>
+        <ul class="book_list_ul" v-else>
+          <li v-for="(item,index) in latelyReaded" :key="index">
+            <div>
+              <img :src="item.cover"/>
+              <p>{{item.title}}</p>
+            </div>
+          </li>
+        </ul>
+      </div>
       <p class="see_book">查看书架</p>
     </div>
    
@@ -37,6 +46,10 @@
 </template>
 
 <script>
+import util from "@/utils/util.js";
+import { getRecord } from "@/api/bookHandle.js";
+import * as book from "@/api/book.js";
+
 export default {
   name: "accountShowInfo",
   data() {
@@ -46,15 +59,36 @@ export default {
         backAnim: "fideOut",
         duration: 0.5
       }
+      // latelyReaded: []
     };
   },
   computed: {
     account() {
-      if (this.$route.params.id == this.$store.getters.accountInfo.id) {
-        return this.$store.getters.accountInfo;
+      if (this.$route.params.id == util.getItem("userId")) {
+        return util.getItem("accountInfo");
       } else {
         // 根据ID进行请求
       }
+    },
+    latelyReaded() {
+      let result = [];
+      getRecord(util.getItem("userId")).then(data => {
+        if (data) {
+          let that = this;
+          let newResult = [];
+          result = data.split(",").slice(0, 4);
+          book.getUpdate(result).then(data => {
+            console.log("获取到的阅读过的书籍信息");
+            console.log(data);
+            data.forEach(book => {
+              book.cover = util.staticPath + book.cover;
+              that.newResult.push(book);
+            });
+            result = newResult;
+          });
+        }
+      });
+      return result;
     }
   },
   methods: {},
@@ -126,13 +160,13 @@ export default {
       }
     }
   }
-  .history_wrapper{
+  .history_wrapper {
     position: relative;
     width: 100%;
     height: px2rem(500);
     background: #fff;
     margin-top: px2rem(20);
-    >h1{
+    > h1 {
       width: 100%;
       height: px2rem(100);
       line-height: px2rem(100);
@@ -141,18 +175,25 @@ export default {
       font-size: 0.3rem;
       text-align: center;
     }
-    .book_list{
+    .book_list {
       display: flex;
       align-items: center;
       justify-content: center;
-      
       width: 100%;
       height: px2rem(300);
       // background: green;
       border-top: 1px solid #eee;
       border-bottom: 1px solid #eee;
+      > p {
+        font-size: 0.3rem;
+        color: #999;
+      }
+      .book_list_ul {
+        width: 100%;
+        height: 100%;
+      }
     }
-    .see_book{
+    .see_book {
       position: absolute;
       left: 0;
       bottom: 0;

@@ -65,7 +65,6 @@ export default {
   },
   saveAccount(data) {
     let list = this.getItem('userList') || [];
-
     let index;
     for (let i = 0; i < list.length; i++) {
       if (list[i].username == data.username) {
@@ -73,7 +72,6 @@ export default {
         break;
       }
     }
-
     if (index != undefined) { //删除已存在的账号
       list.splice(index, 1);
     }
