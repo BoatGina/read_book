@@ -1,29 +1,38 @@
 <template>
-	<div id="container" class="container">
+	<div id="container" class="container" :class="{'night-mode':nightMode}">
 		<mt-header fixed :title="$store.state.book.bookInfo.title" v-if="operation" class="head">
 			<mt-button icon="back" slot="left" @click="$router.go(-1)"></mt-button>
 		</mt-header>
-		<v-touch class="content" @tap="operationAction($event)" @swipeleft="onSwipeLeft" :class="{'night-mode':nightMode}">
+		<v-touch class="content" @tap="operationAction($event)" @swipeleft="onSwipeLeft" >
 			<h3>{{bookChaptersContent.title}}</h3>
 			<article v-html="bookChaptersBody"></article>
 		</v-touch>
 		<div class="menu" v-if="operation">
-      <v-touch class="menu-btn" @tap="showChapter">
-				<img src="./list.svg">
-				<span>目录</span>
-			</v-touch>
-			<v-touch class="menu-btn" v-if="nightMode" @tap="changeMode">
-				<img src="./sun.svg">
-				<span>日间模式</span>
-			</v-touch>
-			<v-touch class="menu-btn" @tap="changeMode" v-else>
-				<img src="./moon.svg">
-				<span>夜间模式</span>
-			</v-touch>
-			<div class="menu-btn">
-				<img src="./setting.svg">
-				<span>设置</span>
-			</div>
+        <div class="share" >
+			  	<!-- <input type="text" placeholder="写下这一刻的想法..." /> -->
+          <mt-field label="" placeholder="写下这一刻的想法..." type="textarea" rows="1" v-model="shareWord"></mt-field>
+          <v-touch @tap="submitCommon">
+            <img  class="submit_btn" src="./fs.svg">
+          </v-touch>
+			  </div>
+        <div class="menu_bottom">
+          <v-touch class="menu-btn" @tap="showChapter">
+			  	<img src="./list.svg">
+			  	<span>目录</span>
+			  </v-touch>
+			  <v-touch class="menu-btn" v-if="nightMode" @tap="changeMode">
+			  	<img src="./sun.svg">
+			  	<span>日间模式</span>
+			  </v-touch>
+			  <v-touch class="menu-btn" @tap="changeMode" v-else>
+			  	<img src="./moon.svg">
+			  	<span>夜间模式</span>
+			  </v-touch>
+			  <div class="menu-btn">
+			  	<img src="./setting.svg">
+			  	<span>设置</span>
+			  </div>
+      </div>
 			
 		</div>
 		<!--阅读设置-->
@@ -77,7 +86,8 @@
 import bookApi from "@/api/book.js";
 import util from "@/utils/util.js";
 import { Indicator, MessageBox, Toast } from "mint-ui";
-import {addRecord} from '@/api/bookHandle.js';
+import { addRecord } from "@/api/bookHandle.js";
+import { addCommont } from "@/api/share.js";
 
 export default {
   name: "ReadBook",
@@ -96,7 +106,8 @@ export default {
       currentChapter: 0,
       nightMode: false, // 夜间/日间模式却换
       isShowChapter: false, // 是否显示目录
-      chapterDescSort: false // 是否降序排列
+      chapterDescSort: false ,// 是否降序排列
+      shareWord:''
     };
   },
   computed: {
@@ -321,6 +332,30 @@ export default {
      */
     decreaseFont() {
       // let articleElem = document.getElementsByTagName('article')[0]
+    },
+    // 提交评论信息
+    async submitCommon(){
+      if(!this.shareWord){
+        Toast('评论不能为空');
+        return;
+      }
+      let update={
+        "main_id":util.getItem("userId"),
+        "main_iconUrl": util.getItem("accountInfo").iconUrl,
+        "main_nickname": util.getItem("accountInfo").nickname,
+        "book_id": this.$store.state.book.bookInfo._id,
+        "cover": util.staticPath + this.$store.state.book.bookInfo.cover,
+        "title": this.$store.state.book.bookInfo.title,
+        "time": (new Date).getTime(),
+        "comment": this.shareWord
+      };
+      console.log("update数据：");
+      console.log(update);
+      let rs =await addCommont(update);
+      console.log("提交分享数据后返回：");
+      console.log(rs);
+      this.shareWord="";
+      this.operation=false;
     }
   },
   /**
@@ -330,12 +365,12 @@ export default {
     console.log("路由开始离开---------");
     let readRecord = util.getItem("followBookList") || {};
     // 添加进阅读书籍中
-    addRecord(util.getItem("userId"),this.$route.params.bookId).then((data)=>{
+    addRecord(util.getItem("userId"), this.$route.params.bookId).then(data => {
       console.log("执行添加阅读记录后返回的数据---------");
       console.log(data);
-      if(data.code == 1){
+      if (data.code == 1) {
         console.log("记录阅读成功");
-      }else{
+      } else {
         console.log("记录阅读失败");
         console.log(data.data.message);
       }
@@ -364,7 +399,7 @@ export default {
 @import "../../../common/scss/minxin.scss";
 
 .container {
-  background: #dad9d4;
+  background: rgba($color: #dad9d4, $alpha: 0.2);
   width: 100vw;
   height: 100vh;
   overflow: auto;
@@ -390,24 +425,44 @@ h3 {
 }
 
 .head {
-  background: #000;
-  color: #f3e7e7;
+  background: #fff;
+  color: #000;
 }
 
 .menu {
   display: flex;
-  flex-direction: row;
-  justify-content: space-around;
+  flex-direction: column;
+  // justify-content: space-around;
   position: fixed;
   bottom: 0;
   left: 0;
-  background: #000;
-  height: 1rem;
+  background: #fff;
   width: 100%;
+  height: auto;
+  .share {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+    height: auto;
+    .mint-field{
+      width: 75%;
+    }
+    .submit_btn{
+      cursor: pointer;
+    }
+  }
+  .menu_bottom {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    height: 1rem;
+  }
 }
 
 .menu img {
-  color: #fff;
+  color: #000;
   width: 0.5rem;
   height: 0.5rem;
   align-self: center;
@@ -417,7 +472,7 @@ h3 {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  color: #f3e7e7;
+  color: #000;
   text-align: center;
 }
 
@@ -437,8 +492,20 @@ h3 {
 }
 
 .night-mode {
-  background: #383434;
-  color: #807d7d;
+  .head {
+    background: #000;
+    color: #fff;
+  }
+  .content {
+    background: #383434;
+    color: #807d7d;
+  }
+  .menu {
+    background: #000;
+    span {
+      color: #fff;
+    }
+  }
 }
 
 .chapter-list {
@@ -509,5 +576,10 @@ h3 {
 .chapterStyle-enter,
 .chapterStyle-leave-to {
   left: -80%;
+}
+
+textarea{
+  outline: none;
+  border: none;
 }
 </style>
