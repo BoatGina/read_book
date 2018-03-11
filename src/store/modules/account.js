@@ -12,6 +12,8 @@ const state = {
 // mutations
 const mutations = {
     [types.SET_ACCOUNT_INFO](state, data) {
+        console.log("vuex获取到的数据：");
+        console.log(data);
         state.accountInfo = data;
         util.setItem('accountInfo',data);
     },

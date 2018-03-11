@@ -25,7 +25,7 @@ export default class Login {
 			}
 		}
 		//更新用户登录信息
-		await this.updateLoginInfo(user)
+		await this.updateLoginInfo(user);
 		//保存session
 		let loginStatus = await this.saveSession(req, user);
 		loginStatus.isLogin = 1 // 将登录态置为1
@@ -114,5 +114,32 @@ export default class Login {
 			console.log(err)
 		});
 		return row[0];
+	}
+
+	/**
+	 * [setInfo 更新个人信息]
+	 * @param  {[type]} update  [更新的数据]
+	 * @return {[type]}       [description]
+	 */
+	static async setInfo(update,userId) {
+		let result = null;
+		const sql = `update user_detail set ? where id = ? `
+		const res = await query(sql, [update, userId]).catch((err) => {
+			console.log(err)
+		})
+		if (res.affectedRows > 0) {
+			result = {
+				"code": 1,
+				"message": "登陆成功",
+				"data": null
+			};
+		} else {
+			result = {
+				"code": 0,
+				"message": "登陆失败",
+				"data":null
+			};
+		}
+		return result;
 	}
 }

@@ -32,7 +32,7 @@
         <p v-if="latelyReaded.length==0">暂无~</p>
         <ul class="book_list_ul" v-else>
           <li v-for="(item,index) in latelyReaded" :key="index">
-            <div>
+            <div class="list_wrapper">
               <img :src="item.cover"/>
               <p>{{item.title}}</p>
             </div>
@@ -48,7 +48,7 @@
 <script>
 import util from "@/utils/util.js";
 import { getRecord } from "@/api/bookHandle.js";
-import * as book from "@/api/book.js";
+import bookApi from "@/api/book.js";
 
 export default {
   name: "accountShowInfo",
@@ -58,8 +58,8 @@ export default {
         forwardAnim: "fideIn",
         backAnim: "fideOut",
         duration: 0.5
-      }
-      // latelyReaded: []
+      },
+      latelyReaded: []
     };
   },
   computed: {
@@ -69,26 +69,6 @@ export default {
       } else {
         // 根据ID进行请求
       }
-    },
-    latelyReaded() {
-      let result = [];
-      getRecord(util.getItem("userId")).then(data => {
-        if (data) {
-          let that = this;
-          let newResult = [];
-          result = data.split(",").slice(0, 4);
-          book.getUpdate(result).then(data => {
-            console.log("获取到的阅读过的书籍信息");
-            console.log(data);
-            data.forEach(book => {
-              book.cover = util.staticPath + book.cover;
-              that.newResult.push(book);
-            });
-            result = newResult;
-          });
-        }
-      });
-      return result;
     }
   },
   methods: {},
@@ -101,6 +81,38 @@ export default {
       return `${hour}时${minute}分`;
     }
   },
+  beforeRouteEnter: (to, from, next) => {
+    next(vm => {
+      // 进入前，先请求阅读记录并储存在本地中
+      console.log("请求阅读记录获取到的数据--------开始---->");
+      getRecord(util.getItem("userId")).then(data => {
+        console.log("请求阅读记录获取到的数据：");
+        console.log(data);
+        let bookArray = data.data.recordBook;
+        if (bookArray) {
+          bookArray = bookArray.split(",").slice(0, -1);
+          if (bookArray.length > 4) {
+            bookArray = bookArray.slice(0, 3);
+          }
+          if (bookArray.length > 0) {
+            let newResult = [];
+            bookArray.forEach(bookId => {
+              bookApi.getBook(bookId).then(bookData => {
+                bookData.cover = util.staticPath + bookData.cover;
+                newResult.push(bookData);
+              });
+            });
+            bookArray = newResult;
+          }
+        } else {
+          bookArray = [];
+        }
+        vm.latelyReaded = bookArray;
+        console.log("latelyReaded数值：");
+        console.log(vm.latelyReaded);
+      });
+    });
+  },
   components: {}
 };
 </script>
@@ -111,6 +123,7 @@ export default {
 .accountShowInfo {
   width: 100%;
   height: 100%;
+  overflow: auto;
   background: #eee;
   .mint-header {
     background: transparent !important;
@@ -180,7 +193,7 @@ export default {
       align-items: center;
       justify-content: center;
       width: 100%;
-      height: px2rem(300);
+      height: px2rem(450);
       // background: green;
       border-top: 1px solid #eee;
       border-bottom: 1px solid #eee;
@@ -191,6 +204,40 @@ export default {
       .book_list_ul {
         width: 100%;
         height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-top:px2rem(15);
+        li {
+          // display: inline-block;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          align-content: flex-start;
+          width: 30%;
+          box-sizing: border-box;
+          height: 100%;
+          // background: red;
+          overflow: hidden;
+        }
+        .list_wrapper {
+          width: 75%;
+          height: 100%;
+          img {
+            float: left;
+            width: 100%;
+          }
+          p {
+            float: left;
+            width: 100%;
+            text-align: center;
+            color: #666;
+            font-size: 0.3rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+        }
       }
     }
     .see_book {

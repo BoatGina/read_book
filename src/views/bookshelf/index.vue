@@ -52,6 +52,11 @@ import bookBottom from "../../components/bookBottom/index";
 import util from "@/utils/util.js";
 import bookApi from "@/api/book.js";
 import { Indicator } from "mint-ui";
+import {
+  deleteBookShelf,
+  addBookShelf,
+  getBookShelf
+} from "@/api/bookHandle.js";
 
 export default {
   name: "bookshelf",
@@ -184,38 +189,29 @@ export default {
       util.setItem("followBookList", localShelf);
     },
     // 初始化数据
-    getBookUpdate() {
+    async getBookUpdate() {
       let localShelf,
         that = this;
       // Indicator.open();
-      let bookId = this.getBookList();
+      let bookId = await this.getBookList();
       console.log("bookId数组的值：");
       console.log(bookId);
       if (!!bookId.length) {
-        bookApi
-          .getUpdate(this.getBookList())
-          .then(data => {
-            localShelf = util.getItem("followBookList")
-              ? util.getItem("followBookList")
-              : [];
-            console.log("777777777777777777");
-            console.log(data);
-            data.forEach(book => {
-              Object.assign(book, localShelf[book._id]);
-              book.cover = util.staticPath + book.cover;
-              that.books.push(book);
-              if (book["private"]) {
-                this.privateBooks[book._id] = book._id;
-              }
-            });
-            console.log("books数组的值：");
-            console.log(that.books);
-            Indicator.close();
-          })
-          .catch(err => {
-            console.log(err);
-            Indicator.close();
-          });
+        let newShelf = {};
+        for (let i = 0; i < bookId.length; i++) {
+          let data = await bookApi.getBook(bookId[i]);
+          let newData = {};
+          newData.cover = util.staticPath + data.cover;
+          newData.title = data.title;
+          newShelf[bookId[i]] = newData;
+          newData._id = bookId[i];
+          this.books.push(newData);
+        }
+        util.setItem("followBookList", newShelf);
+        console.log("books的值：");
+        console.log(this.books);
+        console.log("newShelf的值：");
+        console.log(newShelf);
       } else {
         Indicator.close();
         console.log("关闭Indicator");
@@ -224,14 +220,34 @@ export default {
     /**
      * 返回追更新的书本id
      */
-    getBookList() {
-      let localShelf = util.getItem("followBookList")
-        ? util.getItem("followBookList")
-        : [];
+    async getBookList() {
+      let localShelf = null;
       let bookListArray = [];
-      for (let bookId in localShelf) {
-        bookListArray.push(bookId);
+      if (util.getItem("followBookList")) {
+        localShelf = util.getItem("followBookList");
+        for (let bookId in localShelf) {
+          bookListArray.push(bookId);
+        }
+      } else {
+        let data = await getBookShelf(util.getItem("userId"));
+        console.log("888888888888");
+        console.log(data);
+        if (data.code == 1) {
+          // bookListArray = data.data.bookshelf
+          //   ? data.data.bookshelf.split(",")
+          //   : "";
+          if (data.data.bookshelf) {
+            bookListArray = data.data.bookshelf.split(",");
+            if (!bookListArray[bookListArray.length - 1]) {
+              bookListArray.pop();
+            }
+          }else{
+            bookListArray="";
+          }
+        }
       }
+      console.log("bookListArray的值");
+      console.log(bookListArray);
       return bookListArray;
     },
     // 删除书籍
@@ -244,6 +260,10 @@ export default {
       for (let booId in this.selectedBooks) {
         if (this.selectedBooks[booId]) {
           delete localShelf[booId];
+          deleteBookShelf(util.getItem("userId"), booId).then(res => {
+            console.log("删除书架书籍：");
+            console.log(res.data.message);
+          });
           newBooks[this.selectedBooks[booId]] = undefined;
         }
       }

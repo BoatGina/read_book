@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import util from '@/utils/util.js';
+import util from "@/utils/util.js";
 
 export default {
   name: "accountMain",
@@ -97,7 +97,11 @@ export default {
             num: this.account.note_num,
             last: "个"
           },
-          bottomWords:this.account.zan_num + "个赞 "+ this.account.comment_num +"个评论",
+          bottomWords:
+            this.account.zan_num +
+            "个赞 " +
+            this.account.comment_num +
+            "个评论",
           path: "/user/s/note"
         },
         {

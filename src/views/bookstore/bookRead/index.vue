@@ -77,6 +77,7 @@
 import bookApi from "@/api/book.js";
 import util from "@/utils/util.js";
 import { Indicator, MessageBox, Toast } from "mint-ui";
+import {addRecord} from '@/api/bookHandle.js';
 
 export default {
   name: "ReadBook",
@@ -326,8 +327,19 @@ export default {
    * 对未加入书架的小说，提示是否加入书架
    */
   beforeRouteLeave(to, from, next) {
+    console.log("路由开始离开---------");
     let readRecord = util.getItem("followBookList") || {};
-    // 
+    // 添加进阅读书籍中
+    addRecord(util.getItem("userId"),this.$route.params.bookId).then((data)=>{
+      console.log("执行添加阅读记录后返回的数据---------");
+      console.log(data);
+      if(data.code == 1){
+        console.log("记录阅读成功");
+      }else{
+        console.log("记录阅读失败");
+        console.log(data.data.message);
+      }
+    });
     if (!readRecord[this.$route.params.bookId]) {
       MessageBox.confirm("是否将小说加入书架？").then(
         () => {

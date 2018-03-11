@@ -43,18 +43,19 @@
 import bookApi from "@/api/book.js";
 import moment from "moment";
 import { Indicator } from "mint-ui";
-import util from '@/utils/util.js';
-// import { SET_CURRENT_SOURCE } from "@/store/mutationsType.js";
+import util from "@/utils/util.js";
+import { deleteBookShelf, addBookShelf } from "@/api/bookHandle.js";
 
+// import { SET_CURRENT_SOURCE } from "@/store/mutationsType.js";
 
 moment.locale("zh-cn");
 export default {
   name: "book",
   data() {
     return {
-       vuegConfig: {
+      vuegConfig: {
         forwardAnim: "fadeIn",
-        backAnim:'fadeOut'
+        backAnim: "fadeOut"
       },
       book: null,
       isFollowed: false,
@@ -97,11 +98,11 @@ export default {
       bookApi
         .getMixSource(this.$route.params.bookId)
         .then(data => {
-          console.log('设置书籍来源是数据：');
+          console.log("设置书籍来源是数据：");
           console.log(this.$route.params.bookId);
           console.log(data);
-          this.$store.commit('SET_CURRENT_SOURCE', data[0]._id);
-          console.log('设置书籍来源是：');
+          this.$store.commit("SET_CURRENT_SOURCE", data[0]._id);
+          console.log("设置书籍来源是：");
           console.log(this.$store.state.book.source);
         })
         .catch(err => {
@@ -133,7 +134,7 @@ export default {
       this.$router.go(-1);
     },
     readBook() {
-      this.$store.commit('SET_READ_BOOK', this.book);
+      this.$store.commit("SET_READ_BOOK", this.book);
       this.$router.push("/readbook/" + this.$route.params.bookId);
     },
     isFollowBook() {
@@ -148,6 +149,11 @@ export default {
       if (this.isFollowed) {
         // 删除该书籍在本地的缓存记录
         delete localShelf[this.book._id];
+        // 删除数据库该书籍信息
+        deleteBookShelf(util.getItem("userId"), this.book._id).then(data => {
+          console.log("删除书架书籍信息：");
+          console.log(data.data.message);
+        });
         // 重新保存
         util.setItem("followBookList", localShelf);
         this.isFollowed = !this.isFollowed;
@@ -158,6 +164,10 @@ export default {
           title: this.book.title,
           source: this.$store.state.source
         };
+        addBookShelf(util.getItem("userId"), this.book._id).then(data => {
+          console.log("添加书架书籍信息：");
+          console.log(data.data.message);
+        });
         util.setItem("followBookList", localShelf);
         this.isFollowed = !this.isFollowed;
       }
@@ -170,7 +180,7 @@ export default {
 <style scoped lang="scss" type="text/css">
 @import "../../../common/scss/minxin.scss";
 
-.book{
+.book {
   width: 100%;
   height: 100%;
   overflow: auto;
@@ -264,7 +274,7 @@ section:first-child {
   flex-direction: column;
   width: 33%;
   text-align: center;
-  span{
+  span {
     font-size: 0.3rem;
   }
 }

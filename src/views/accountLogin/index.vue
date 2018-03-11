@@ -96,7 +96,7 @@ export default {
           req.pwd = this.accountPwd;
         }
         util.saveAccount(req);
-        this.setAccountInfo(data.userInfo).then(() => {
+        this.$store.dispatch("setAccountInfo",data.userInfo).then(() => {
           this.$router.replace("/");
         });
       } else {
