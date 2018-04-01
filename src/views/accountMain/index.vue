@@ -6,7 +6,7 @@
         <i  slot="icon" class="iconfont icon-icon-" ></i>
       </mt-button>
       <mt-button slot="right" @click.stop="route('/user/s/setUp')">
-        <i  slot="icon" class="iconfont icon-iconfonticonfontjixieqimo"></i>
+        <i  slot="icon" class="iconfont icon-tuichu"></i>
       </mt-button>
     </mt-header>
     <!-- 头像个人信息 -->

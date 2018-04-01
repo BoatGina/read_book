@@ -58,10 +58,10 @@ export default {
   name: "idea",
   data() {
     return {
-      ideaList2: [
+      ideaList: [
         {
           userInfo: {
-            icon:
+            main_iconUrl:
               "http://img4.imgtn.bdimg.com/it/u=3503097649,4282610101&fm=27&gp=0.jpg",
             nickname: "吉"
           },
@@ -98,7 +98,7 @@ export default {
           }
         }
       ],
-      ideaList:[]
+      ideaList2:[]
     };
   },
   methods: {
