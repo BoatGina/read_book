@@ -9,6 +9,7 @@ function request_new(url) {
     return request_get(`${url_header}${url}`);
 }
 
+
 export default {
 
     /**
