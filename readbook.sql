@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50721
 File Encoding         : 65001
 
-Date: 2018-03-11 19:12:10
+Date: 2018-04-08 13:14:03
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -85,8 +85,8 @@ CREATE TABLE `user` (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('1', '141515454', '00dbc41a06d497bc221879997c9ec9', '1', '1520766163');
-INSERT INTO `user` VALUES ('2', '141545642', '00dbc41a06d497bc221879997c9ec9', '1', '1520766631');
+INSERT INTO `user` VALUES ('1', '141515454', '00dbc41a06d497bc221879997c9ec9', '1', '1523090579');
+INSERT INTO `user` VALUES ('2', '141545642', '00dbc41a06d497bc221879997c9ec9', '1', '1522890267');
 
 -- ----------------------------
 -- Table structure for user_books
@@ -103,8 +103,8 @@ CREATE TABLE `user_books` (
 -- ----------------------------
 -- Records of user_books
 -- ----------------------------
-INSERT INTO `user_books` VALUES ('1', '5a4f4b389303381c02a50b74', '5a4f4b389303381c02a50b74,56619528b52bafc43eff74bb,57819dd770dd7eda12288dd8,57bafcac03650d4213a3aad2,53b76d8840f97c4245511144,573da6297a4270ec448bb41b,5a825823e2dbd1471161009e,595258be4da2d29421ff7ef7,596f801a9d9a69af467c7b13,54b67db628d974fd71773887,55eef8b27445ad27755670b9,5702151c1c8e4db9483762d6,55b9e298a33592d654b6d190,', '0');
-INSERT INTO `user_books` VALUES ('2', '59261a9b94d093211e6d49f6,58db11eef02f7d7e2ab97775,5a534e9d6c81b81b7030beb5,55eef8b27445ad27755670b9', null, '0');
+INSERT INTO `user_books` VALUES ('1', '595df13d98367b8230d620d1,564de7ca467ac359228f9d63,5a4f4b389303381c02a50b74', '57a0b33a2a20255d4df28e50,564de7ca467ac359228f9d63,51c162ba53e597de280001f9,5816b415b06d1d32157790b1,58b67df6c80305fc581e27d2,56ac44baf904410236d98fe7,5426be704f125ee41a7a9817,5a4f4b389303381c02a50b74,56619528b52bafc43eff74bb,57819dd770dd7eda12288dd8,57bafcac03650d4213a3aad2,53b76d8840f97c4245511144,573da6297a4270ec448bb41b,5a825823e2dbd1471161009e,595258be4da2d29421ff7ef7,596f801a9d9a69af467c7b13,54b67db628d974fd71773887,55eef8b27445ad27755670b9,5702151c1c8e4db9483762d6,55b9e298a33592d654b6d190,', '0');
+INSERT INTO `user_books` VALUES ('2', '5209e165be6d1afb1a002100,56230f5bcfa8c5d9438794e4,59261a9b94d093211e6d49f6,58db11eef02f7d7e2ab97775,5a534e9d6c81b81b7030beb5', null, '0');
 
 -- ----------------------------
 -- Table structure for user_care
@@ -148,8 +148,8 @@ CREATE TABLE `user_detail` (
 -- ----------------------------
 -- Records of user_detail
 -- ----------------------------
-INSERT INTO `user_detail` VALUES ('1', '吉', '女', '广东揭阳', '我是前端啊啊', '7777吃得苦中苦，方为人上人', 'http://img4.imgtn.bdimg.com/it/u=3503097649,4282610101&fm=27&gp=0.jpg', '0', '0', '0', '0', '0', '0', '0', '0');
-INSERT INTO `user_detail` VALUES ('2', '吉2', '男', '广东揭阳', '我是后台啊啊', '不断前行', 'http://img4.imgtn.bdimg.com/it/u=3503097649,4282610101&fm=27&gp=0.jpg', '0', '0', '0', '0', '0', '0', '0', '0');
+INSERT INTO `user_detail` VALUES ('1', '吉', '女', '广东揭阳', '我是前端啊555啊6666', '7777吃得苦中苦，方为人上人', 'http://img4.imgtn.bdimg.com/it/u=3503097649,4282610101&fm=27&gp=0.jpg', '0', '0', '0', '0', '0', '0', '0', '0');
+INSERT INTO `user_detail` VALUES ('2', '吉2', '男', '广东揭阳', '我是后台啊啊79789', '不断前行', 'http://img4.imgtn.bdimg.com/it/u=3503097649,4282610101&fm=27&gp=0.jpg', '0', '0', '0', '0', '0', '0', '0', '0');
 
 -- ----------------------------
 -- Table structure for user_share
@@ -165,7 +165,7 @@ CREATE TABLE `user_share` (
   `title` varchar(255) DEFAULT NULL COMMENT '分享书籍标题',
   `time` bigint(225) DEFAULT NULL COMMENT '分享时间',
   `comment` longtext COMMENT '分享内容',
-  `zan` int(225) DEFAULT NULL COMMENT '点赞数量',
+  `zan` varchar(225) DEFAULT NULL COMMENT '点赞用户',
   `commentList` varchar(255) DEFAULT NULL COMMENT '评论列表id',
   PRIMARY KEY (`share_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -173,6 +173,8 @@ CREATE TABLE `user_share` (
 -- ----------------------------
 -- Records of user_share
 -- ----------------------------
-INSERT INTO `user_share` VALUES ('0e1f7dca9f3afd45c18', '1', 'http://img4.imgtn.bdimg.com/it/u=3503097649,4282610101&fm=27&gp=0.jpg', '吉', '5a4f4b389303381c02a50b74', 'http://statics.zhuishushenqi.com/agent/http%3A%2F%2Fimg.1391.com%2Fapi%2Fv1%2Fbookcenter%2Fcover%2F1%2F2202962%2F2202962_2b886058d8af42b585abfa59f1ac9a47.jpg%2F', '长生在武侠世界', '1520765022471', '5555', null, null);
-INSERT INTO `user_share` VALUES ('13eeda6bb3bc7a4d9d8', '1', 'http://img4.imgtn.bdimg.com/it/u=3503097649,4282610101&fm=27&gp=0.jpg', '吉', '5a4f4b389303381c02a50b74', 'http://statics.zhuishushenqi.com/agent/http%3A%2F%2Fimg.1391.com%2Fapi%2Fv1%2Fbookcenter%2Fcover%2F1%2F2202962%2F2202962_2b886058d8af42b585abfa59f1ac9a47.jpg%2F', '长生在武侠世界', '1520765101030', '这本书的文采非常生动！！！！', null, null);
-INSERT INTO `user_share` VALUES ('8f8d54a831e6e0407c8', '2', 'http://img4.imgtn.bdimg.com/it/u=3503097649,4282610101&fm=27&gp=0.jpg', '吉2', '59261a9b94d093211e6d49f6', 'http://statics.zhuishushenqi.com/agent/http%3A%2F%2Fimg.1391.com%2Fapi%2Fv1%2Fbookcenter%2Fcover%2F1%2F2044833%2F2044833_17276ff4895242f4b93b2d33d863a997.jpg%2F', '我的姐姐是大明星', '1520766650998', '很有创意哦', null, null);
+INSERT INTO `user_share` VALUES ('0f14fc884eb0d74b878', '2', 'http://img4.imgtn.bdimg.com/it/u=3503097649,4282610101&fm=27&gp=0.jpg', '吉2', '5209e165be6d1afb1a002100', 'http://statics.zhuishushenqi.com/agent/http%3A%2F%2Fimg.1391.com%2Fapi%2Fv1%2Fbookcenter%2Fcover%2F1%2F47063%2F_47063_107604.jpg%2F', '三国之宅行天下', '1522769708459', '这本书很好看', '0', null);
+INSERT INTO `user_share` VALUES ('13eeda6bb3bc7a4d9d8', '1', 'http://img4.imgtn.bdimg.com/it/u=3503097649,4282610101&fm=27&gp=0.jpg', '吉', '5a4f4b389303381c02a50b74', 'http://statics.zhuishushenqi.com/agent/http%3A%2F%2Fimg.1391.com%2Fapi%2Fv1%2Fbookcenter%2Fcover%2F1%2F2202962%2F2202962_2b886058d8af42b585abfa59f1ac9a47.jpg%2F', '长生在武侠世界', '1520765101030', '这本书的文采非常生动！！！！', '0', null);
+INSERT INTO `user_share` VALUES ('2ad71f813899cb43c48', '1', 'http://img4.imgtn.bdimg.com/it/u=3503097649,4282610101&fm=27&gp=0.jpg', '吉', '5426be704f125ee41a7a9817', 'http://statics.zhuishushenqi.com/agent/http%3A%2F%2Fimg.1391.com%2Fapi%2Fv1%2Fbookcenter%2Fcover%2F1%2F42298%2F_42298_630777.jpg%2F', '最强特种兵之龙刺', '1520779199262', '很好', '0', null);
+INSERT INTO `user_share` VALUES ('4f0e3eaebe563745328', '2', 'http://img4.imgtn.bdimg.com/it/u=3503097649,4282610101&fm=27&gp=0.jpg', '吉2', '58db11eef02f7d7e2ab97775', 'http://statics.zhuishushenqi.com/agent/http%3A%2F%2Fimg.1391.com%2Fapi%2Fv1%2Fbookcenter%2Fcover%2F1%2F1469620%2F1469620_8daf9d0e2e4e4957aa75981772d29680.jpg%2F', '黑道学生之校园狂少', '1522768925356', '可以吧', '0', null);
+INSERT INTO `user_share` VALUES ('7b384b083a6a07413e8', '1', 'http://img4.imgtn.bdimg.com/it/u=3503097649,4282610101&fm=27&gp=0.jpg', '吉', '5a4f4b389303381c02a50b74', 'http://statics.zhuishushenqi.com/agent/http%3A%2F%2Fimg.1391.com%2Fapi%2Fv1%2Fbookcenter%2Fcover%2F1%2F2202962%2F2202962_2b886058d8af42b585abfa59f1ac9a47.jpg%2F', '长生在武侠世界', '1522671690157', '这本书还不错的', '0', null);
