@@ -7,45 +7,7 @@
 
     <ul class="idea_ul" >
       <li v-for="(item,index) in ideaList" :key="index">
-        <div class="icon_wrapper">
-          <div class="img_wrapper">
-            <img :src="item.main_iconUrl"/>
-          </div>
-        </div>
-
-        <div class="content_wrapper">
-          <p class="nickname">{{item.main_nickname}}</p>
-          <p class="comment">{{item.comment}}</p>
-          <div class="book_contain">
-            <div class="book_wrapper">
-              <img :src="item.cover"/>
-            </div>
-            <p class="book_title">{{item.title}}</p>
-          </div>
-
-          <p class="handle_wrapper">
-            <span class="icon_left">{{item.time | formatTime}}</span>
-            <span class="icon_right">
-              <i class="iconfont icon-aixin1"></i>
-              <i class="iconfont icon-pinglun"></i>
-            </span>
-          </p>
-
-          <div class="comment_wrapper" v-if="item.commentList || item.zan">
-          <p v-if="item.zan" class="zan"><i class="iconfont icon-aixin1"></i> {{item.zan}}个赞</p>
-          <ul v-if="item.commentList">
-            <li v-for="(comment,index) in item.commentList" :key="index">
-                <p><span class="name">{{comment.nickname}}</span>  {{comment.content}}</p>
-                <p v-if="comment.replyList" v-for="(reply,index) in comment.replyList" :key="index">
-                  <span class="name">{{reply.from.nickname}}</span> 回复 <span class="name">{{comment.nickname}}</span>  {{reply.content}}
-                </p>
-            </li>
-          </ul>
-        </div>
-        </div>  
-
-        
-
+         <commentItem :item="item"></commentItem>
       </li>
     </ul>
   </div>
@@ -53,6 +15,8 @@
 
 <script>
 import { getCommont } from "@/api/share.js";
+import commentItem from '@/components/commentItem';
+import { getAllCommont } from "@/common/js/organize.js";
 
 export default {
   name: "idea",
@@ -106,21 +70,18 @@ export default {
       let data =await getCommont();
       if(data.code == 1){
         this.ideaList = data.data.comments;
+        this.ideaList.commentList = this.ideaList.commentList ? getAllCommont(this.ideaList.commentList) : [];
       }
       console.log("前端获取到的数据：");
       console.log(data);
     }
   },
-  filters: {
-    formatTime(data) {
-      let newData = new Date(Number(data));
-      return `${newData.getFullYear()}年${newData.getMonth() +
-        1}月${newData.getDate()}日`;
-    }
-  },
   created(){
     console.log("/////////////////////");
     this.initData();
+  },
+  components:{
+    commentItem
   }
 };
 </script>
@@ -161,8 +122,8 @@ export default {
       }
       .content_wrapper {
         flex: 1;
-        padding-left: 0.2rem;
-        padding-right: 0.2rem;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
         p {
           width: 100%;
           font-size: 0.3rem;
@@ -220,10 +181,13 @@ export default {
         .zan{
           color: #999;
           line-height: 0.5rem;
-          border-bottom: 1px solid #ccc;
+          // border-bottom: 1px solid #ccc;
         }
         .name{
           color: #4169E1;
+        }
+        p{
+          margin-bottom: 0.1rem;
         }
       }
     }

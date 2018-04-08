@@ -346,7 +346,7 @@ export default {
         "book_id": this.$store.state.book.bookInfo._id,
         "cover": util.staticPath + this.$store.state.book.bookInfo.cover,
         "title": this.$store.state.book.bookInfo.title,
-        "time": (new Date).getTime(),
+        "time": Date.now(),
         "comment": this.shareWord
       };
       console.log("update数据：");
